@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['consult']);
+        $this->middleware('admin')->except(['consult']);
     }
 
 
@@ -249,6 +249,10 @@ class UserController extends Controller
 
     public function find(Request $request)
     {
+    	if ($request->findMonth == 'all' || $request->findStatus == 'all') {
+    		return redirect()->route('users.index');
+    	}
+
 		if ($request->findName != null) {
 			$users = User::where('name', 'like', '%'.$request->findName.'%')->paginate(10); 
 		}
@@ -270,7 +274,21 @@ class UserController extends Controller
 
     public function consult(Request $request)
     {
+    	$rules = [
+	    	'consult' => 'required',
+		];
+
+		$customMessages = [
+		    'required' => 'Campo vacío!!',
+		];
+
+		$request->validate($rules, $customMessages);
+
     	$user = User::where('document',$request->consult)->first();
+
+		if (!$user) {
+			return redirect()->route('home')->with('errorConsult','no existe ningun usuario con este N° de acceso');
+		}
 
         return view('home',compact('user'));
     }

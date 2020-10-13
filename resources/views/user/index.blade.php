@@ -22,6 +22,7 @@
                     <div class="col-md-2">
                         <select class="form-control" name="findMonth" id="findMonth">
                           <option value="">Buscar mes...</option>
+                          <option value="all">Todos</option>
                           <option value="1">Enero</option>
                           <option value="2">Febrero</option>
                           <option value="3">Marzo</option>
@@ -39,6 +40,7 @@
                     <div class="col-md-3">
                         <select class="form-control" name="findStatus" id="findStatus">
                           <option value="">Buscar estado...</option>
+                          <option value="all">Todos</option>
                           <option value="1">Activo</option>
                           <option value="0">Vencido</option>
                         </select>

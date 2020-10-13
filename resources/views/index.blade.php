@@ -34,7 +34,13 @@
                 <div class="card-body mx-auto text-center">
                     <div class="col-md-12">
                       @csrf
-                      <input type="text" class="form-control" name="consult">   
+                      <input type="text" class="form-control" name="consult">  
+                      @if($errors->has('consult')) 
+                        <h6 class="error-message" style="color:#D10024">{{ $errors->first('consult') }}</h6>
+                      @endif 
+                      @if(Session::has('errorConsult')) 
+                        <h6 class="error-message" style="color:#D10024">{{ Session::get('errorConsult') }}</h6>
+                      @endif 
                     </div>
                     <center>
                       <div class="col-md-9">
