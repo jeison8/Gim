@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Helpers\CollectionHelper;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class UserController extends Controller
 {
@@ -78,7 +79,7 @@ class UserController extends Controller
 
 		$customMessages = [
 		    'required' => 'Cuidado!! el campo no se puede dejar vacío',
-		    'unique' => 'Ya exite un usuario con este N° de documento',
+		    'unique' => 'Ya existe un usuario con este N° de documento',
 		];
 
 		$request->validate($rules, $customMessages);
@@ -105,6 +106,10 @@ class UserController extends Controller
             'is_admin' => 0,
             'status' => $status 
         ]);
+
+        $pdf = PDF::loadView('user.pdf',compact('user'))->output();
+
+        Storage::disk('public')->put('facturas/'.$user->document.'.pdf', $pdf);
 
         return redirect()->route('users.show',compact('user'));
     }
