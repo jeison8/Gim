@@ -37,4 +37,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    //scope
+    public function scopeName($query,$name)
+    {
+        if ($name) {
+             	return $query->where('name', 'like', '%'.$name.'%'); 
+            }
+    }
+
+    public function scopeCc($query,$cc)
+    {
+        if ($cc) {
+             	return $query->where('document', 'like', '%'.$cc.'%'); 
+            }
+    }
+      
+    public function scopeMonth($query,$month)
+    {
+        if ($month) {
+             	return $query->whereMonth('start_date', '=', $month)->orWhereMonth('finish_date', '=', $month); 
+            }
+    }
+
+    public function scopeStatus($query,$status)
+    {
+        if ($status) {
+             	return $query->where('status',$status); 
+            }
+    }
+
+
+
+		// if ($request->findMonth != null) {
+		// 	$users = User::whereMonth('start_date', '=', $request->findMonth)
+		// 	->orWhereMonth('finish_date', '=', $request->findMonth)->paginate(20); 
+		// }
+
+
 }

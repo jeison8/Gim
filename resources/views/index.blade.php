@@ -14,7 +14,6 @@
       <div class="site-mobile-menu-body"></div>
     </div>
 
-
     <a id="bgndVideo" class="player"
       data-property="{videoURL:'https://www.youtube.com/watch?v=w-cRWOjlk8c',showYTLogo:false, showAnnotations: false, showControls: false, cc_load_policy: false, containment:'#home-section',autoPlay:true, mute:true, startAt:255, stopAt: 271, opacity:1}">
     </a>
@@ -34,7 +33,7 @@
                 <div class="card-body mx-auto text-center">
                     <div class="col-md-12">
                       @csrf
-                      <input type="text" class="form-control" name="consult">  
+                      <input type="text" class="form-control" name="consult" autocomplete="off" autofocus>  
                       @if($errors->has('consult')) 
                         <h6 class="error-message" style="color:#D10024">{{ $errors->first('consult') }}</h6>
                       @endif 
@@ -261,7 +260,7 @@
           <div class="col-lg-4 mb-4 mb-lg-0 col-md-6 text-center" data-aos="fade-up" data-aos-delay="200">
             <div class="person">
               <img src="images/person_1.jpg" alt="Image" class="img-fluid" style="width:100px; height: 100px">
-              <h3>El Menor</h3>
+              <h3>Leo</h3>
               <p class="position">Entrenador</p>
               <p>Entrenador junior en curso de estudio de fisioterapia y ciencia corporal.</p>
             </div>

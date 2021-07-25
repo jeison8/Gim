@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Led;
 use App\User;
 use App\History;
 use Carbon\Carbon;
@@ -20,9 +21,19 @@ class UserController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
-       	$users = User::all();
+        $name = $request->get('findName');
+        $cc = $request->get('findCedula');
+        $month = $request->get('findMonth');
+        $status = $request->get('findStatus');    
+
+       	$users = User::orderBy('id')
+           ->name($name)
+           ->cc($cc)
+           ->month($month)
+           ->status($status)
+           ->paginate(30);
 
 		foreach ($users  as $key => $user) {
 			if ($user->finish_date < Carbon::now()) {
@@ -35,9 +46,6 @@ class UserController extends Controller
 				$user->save();
 			}
 		}
-
-
-		$users = CollectionHelper::paginate($users, 10);
 
         return view('user.index',compact('users'));
     }
@@ -191,14 +199,21 @@ class UserController extends Controller
 
 	public function history(User $user)
     {
-    	$histories = History::where('users_id',$user->id)->paginate(10);
+    	$histories = History::where('users_id',$user->id)->paginate(30);
 
         return view('user.history',compact('histories','user'));
     }
 
 
     public function destroy(User $user)
-    {
+    { 
+
+        $history = History::where('users_id',$user->id)->first();
+
+        if($history){
+            History::where('users_id',$user->id)->delete();
+        }
+
     	$user->delete();
 
         return redirect()->route('users.index');
@@ -247,31 +262,6 @@ class UserController extends Controller
 
 
 
-    public function find(Request $request)
-    {
-    	if ($request->findMonth == 'all' || $request->findStatus == 'all') {
-    		return redirect()->route('users.index');
-    	}
-
-		if ($request->findName != null) {
-			$users = User::where('name', 'like', '%'.$request->findName.'%')->paginate(10); 
-		}
-
-		if ($request->findMonth != null) {
-			$users = User::whereMonth('start_date', '=', $request->findMonth)
-			->orWhereMonth('finish_date', '=', $request->findMonth)->paginate(10); 
-		}
-
-		if ($request->findStatus != null) {
-			$users = User::where('status',$request->findStatus)->paginate(10); 
-		}
-
-
-        return view('user.index',compact('users'));
-    }
-
-
-
     public function consult(Request $request)
     {
     	$rules = [
@@ -286,12 +276,54 @@ class UserController extends Controller
 
     	$user = User::where('document',$request->consult)->first();
 
+        if ($user) {
+            $port = "\\\\.\\COM8"; //Puerto serie al que está conectada tu placa.
+            $pin =  12; //Pin al que está conectado el led.
+
+            try{
+                $led = new Led($port, $pin);
+                $led->conectar();
+                if($user->finish_date > Carbon::now()->format('Y-m-d')){
+                    $led->encender();
+                }else{
+                    //$led->apagar();
+                }
+                $led->desconectar();
+            }catch(Exception $e){
+                $state = $e->getMessage();
+            }
+        }
+
 		if (!$user) {
 			return redirect()->route('home')->with('errorConsult','no existe ningun usuario con este N° de acceso');
 		}
 
         return view('home',compact('user'));
     }
+
+    
+    // public function find(Request $request)
+    // {
+        
+    // 	if ($request->findMonth == 'all' || $request->findStatus == 'all') {
+    // 		return redirect()->route('users.index');
+    // 	}
+
+	// 	if ($request->findName != null) {
+	// 		$users = User::where('name', 'like', '%'.$request->findName.'%')->paginate(20); 
+	// 	}
+
+	// 	if ($request->findMonth != null) {
+	// 		$users = User::whereMonth('start_date', '=', $request->findMonth)
+	// 		->orWhereMonth('finish_date', '=', $request->findMonth)->paginate(20); 
+	// 	}
+
+	// 	if ($request->findStatus != null) {
+	// 		$users = User::where('status',$request->findStatus)->paginate(20); 
+	// 	}
+
+    //     return view('user.index',compact('users'));
+    // }
 
 
 

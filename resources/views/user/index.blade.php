@@ -15,46 +15,52 @@
             <br>
             <div class="row">
                   <div class="col-md-4">
-                    <form  method="POST" action="{{ route('users.find') }}" onsubmit="validateSearch(event);">
-                    @csrf
-                    <input type="text" class="form-control" name="findName" id="findName" placeholder="Buscar nombre..."/>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-control" name="findMonth" id="findMonth">
-                          <option value="">Buscar mes...</option>
-                          <option value="all">Todos</option>
-                          <option value="1">Enero</option>
-                          <option value="2">Febrero</option>
-                          <option value="3">Marzo</option>
-                          <option value="4">Abril</option>
-                          <option value="5">Mayo</option>
-                          <option value="6">Junio</option>
-                          <option value="7">Julio</option>
-                          <option value="8">Agosto</option>
-                          <option value="9">Septiembre</option>
-                          <option value="10">Octubre</option>
-                          <option value="11">Noviembre</option>
-                          <option value="12">Diciembre</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control" name="findStatus" id="findStatus">
-                          <option value="">Buscar estado...</option>
-                          <option value="all">Todos</option>
-                          <option value="1">Activo</option>
-                          <option value="0">Vencido</option>
-                        </select>
-                    </div>
+                    <form  method="GET" action="{{ route('users.index') }}"><!--onsubmit="validateSearch(event);"-->
+                    <!--@csrf-->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" name="findCedula" id="findCedula" placeholder="Cedula..."/>
+                      </div>
+                      <br><br>
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" name="findName" id="findName" placeholder="Nombre..."/>
+                      </div>
+                      </div>  
+                      </div>
+                      <div class="col-md-2">
+                          <select class="form-control" name="findMonth" id="findMonth">
+                            <option value="">Mes...</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                          </select>
+                      </div>
+                      <div class="col-md-2">
+                          <select class="form-control" name="findStatus" id="findStatus">
+                            <option value="">Estado...</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Vencido</option>
+                          </select>
+                      </div>
                     <div class="col-md-1">
                     <a href="{{route('users.create')}}"><button class="form-control" style="background-color:#32383e; color:white; border: none; cursor: pointer;"><i class="icon-search" style="color: white;"></i></button></a>
-                    </form>
+                  </form>
                   </div>
-              <div class="col-md-1">
-                <a href="{{route('users.amount')}}"><button class="form-control" style="background-color:#45C440; color:white; border: none; cursor: pointer;"><i class="icon-dollar" style="color: white;"></i></button></a>
-              </div>
-              <div class="col-md-1">
-                <a href="{{route('users.create')}}"><button class="form-control" style="background-color:#D10024; color:white; border: none; cursor: pointer;"><i class="icon-user-plus" style="color: white;"></i></button></a>
-              </div>
+                  <div class="col-md-1">
+                    <a href="{{route('users.amount')}}"><button class="form-control" style="background-color:#45C440; color:white; border: none; cursor: pointer;"><i class="icon-dollar" style="color: white;"></i></button></a>
+                  </div>
+                  <div class="col-md-1">
+                    <a href="{{route('users.create')}}"><button class="form-control" style="background-color:#D10024; color:white; border: none; cursor: pointer;"><i class="icon-user-plus" style="color: white;"></i></button></a>
+                  </div>
             </div>
             <br>
             <div class="table-responsive">
@@ -73,7 +79,10 @@
                 	@foreach($users as $user) 		
                   <tr>
                     <td><img src="{{asset($user->img)}}" width="100px"></td>
-          				  <td>{{$user->name}}</td>
+          				  <td>
+                      {{$user->name}}<br>
+                      {{$user->is_admin == 1 ? '' : $user->document}}
+                    </td>
                     <td>
                       <?php
                         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -107,15 +116,17 @@
   </div>
 </div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   
 function validateSearch(event){
 
   let inputName = document.getElementById("findName").value;
   let selectMonth = document.getElementById("findMonth").value;
   let selectStatus = document.getElementById("findStatus").value;
+  let inputCedula = document.getElementById("findCedula").value;
 
-  if(inputName == "" && selectMonth == "" && selectStatus == ""){ 
+
+  if(inputName == "" && selectMonth == "" && selectStatus == "" && inputCedula == ""){ 
 
       event.preventDefault();
 
@@ -123,6 +134,6 @@ function validateSearch(event){
 
 }
 
-</script>
+</script> -->
 
 @endsection

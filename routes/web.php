@@ -30,8 +30,9 @@ Route::patch('renovated/{user}', 'UserController@renovated')->name('users.renova
 Route::get('history/{user}', 'UserController@history')->name('users.history');
 Route::get('destroy-history/{user}', 'UserController@destroyHistory')->name('users.destroyHistory');
 Route::get('amount', 'UserController@amount')->name('users.amount');
-Route::post('find', 'UserController@find')->name('users.find');
 Route::post('consult', 'UserController@consult')->name('users.consult');
+//Route::post('find', 'UserController@find')->name('users.find');
+
 
 
 
